@@ -1,5 +1,5 @@
-# Course Predictor
--
+# Stock Price Predictor
+Prediction of stock prices. Uses mashine learning algorithms in Python. Possible databases could be e. g. [https://finance.yahoo.com/](https://finance.yahoo.com/)
 
 ## Getting Started
 
@@ -8,27 +8,21 @@
 1. You need to have python 3.X installed.
 
 ```bash
-pip install numpy scipy matplotlib scikit-learn
+pip install pandas
 ```
 
 2. Clone the repository
+
 ```bash
 git clone https://github.com/th0rben/course-predictor.git
 ```
+
+3. [Download the data](https://pythonprogramming.net/downloads/intraQuarter.zip/)
+
 ### Run the program
 
 #### Run it manually
 Execute the **main.py** file
-#### Run it automatically (linux only)
-To scrap every day at 12:00 execute:
-(adds cronjob to crontab)
-```bash
-crontab /git/src/cronjob.txt
-```
-
-If you want to change the frequency or time: Change [cronjob.txt](/src/cronjob.txt) 
-
-For mor information see: [https://en.wikipedia.org/wiki/Cron](https://en.wikipedia.org/wiki/Cron)
 
 ## Running the tests
 
@@ -49,8 +43,6 @@ It would be great if you mention any mistakes you stumble over.
 
 ## Versioning
 
-[27.07.2018] - Scrap articles vom bild.de
-
 This project is still in the Beta-Version
 
 ## Authors
@@ -63,6 +55,4 @@ This project is licensed under the GPL License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* This project is inspired by ...
-
-
+* This project is inspired by the [Scikit Learn Machine Learning Tutorial](https://www.youtube.com/watch?v=URTZ2jKCgBc&list=PLQVvvaa0QuDd0flgGphKCej-9jp-QdzZ3) by Sentdex
