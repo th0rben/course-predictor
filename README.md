@@ -8,7 +8,7 @@ Prediction of stock prices. Uses mashine learning algorithms in Python. Possible
 1. You need to have python 3.X installed.
 
 ```bash
-pip install pandas
+pip install pandas matplotlib
 ```
 
 2. Clone the repository
