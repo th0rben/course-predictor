@@ -8,7 +8,7 @@ Prediction of stock prices. Uses mashine learning algorithms in Python. Possible
 1. You need to have python 3.X installed.
 
 ```bash
-pip install pandas matplotlib
+pip install pandas matplotlib sklearn quandl scipy
 ```
 
 2. Clone the repository
@@ -18,6 +18,15 @@ git clone https://github.com/th0rben/course-predictor.git
 ```
 
 3. [Download the data](https://pythonprogramming.net/downloads/intraQuarter.zip/)
+
+4. Configure Quandl
+- Create a Account on Quandl.com
+- Enter your API Key into a file named login_data.py (its ignored by git)
+'''
+quandl_key = *YOUR API KEY FROM QUANDL*
+'''
+
+
 
 ### Run the program
 
