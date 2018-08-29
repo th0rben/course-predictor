@@ -6,7 +6,7 @@ from datetime import datetime
 
 #path = "C:/Users/Thorben/git/course-predictor/intraQuarter"
 path = "C:/Users/bav9158/git/course-predictor/data"
-not_available_treshold = 0
+not_available_treshold = 15
 
 def Key_Stats(gather=[
                     "Total Debt/Equity",
@@ -104,8 +104,8 @@ def Key_Stats(gather=[
         each_file = os.listdir(each_dir)
         ticker = each_dir.split("\\")[1]
         ticker_list.append(ticker)
-        starting_stock_value = False
-        starting_sp500_value = False
+#        starting_stock_value = False
+#        starting_sp500_value = False
         if len(each_file) > 0:
             for file in each_file:
                 date_stamp = datetime.strptime(file, '%Y%m%d%H%M%S.html')
@@ -201,10 +201,10 @@ def Key_Stats(gather=[
                     
                     difference = stock_p_change-sp500_p_change
                     
-                    if difference > 0:
-                        status = 'outperform'
+                    if difference > 5:
+                        status = 1
                     else:
-                        status = 'underperform'
+                        status = 0
                     
                     if value_list.count("N/A") > not_available_treshold:
                         pass
@@ -260,7 +260,7 @@ def Key_Stats(gather=[
                 except Exception as e:
                     #print(str(e))
                     pass
-    df.to_csv("key_stats_without_na.csv")
+    df.to_csv("key_stats_acc_perf_WITH_NA_enhanced.csv")
     
     
 Key_Stats()
