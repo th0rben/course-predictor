@@ -47,7 +47,7 @@ FEATURES = ['DE Ratio',
             'Shares Short (prior ']
 
 def Status_Calc(stock, sp500):
-    difference = stock -sp500
+    difference = stock - sp500
     if difference > how_much_better:
         return 1
     else:
@@ -62,68 +62,68 @@ def Build_Data_Set():
     data_df = data_df.fillna(0).replace("N/A",0)
 
     data_df["Status2"] = list(map(Status_Calc, data_df["stock_p_change"], data_df["sp500_p_change"]))
-
     X = np.array(data_df[FEATURES].values)#.tolist())
-
-    y = (data_df["Status"]
+    y = (data_df["Status2"]
          .replace("underperform",0)
          .replace("outperform",1)
          .values.tolist()) 
-
     X = preprocessing.scale(X)
     
     z = np.array(data_df[["stock_p_change","sp500_p_change"]])
 
     return X,y,z
 
-def Analysis():
+def analysis_print(analysis):
+    print("Accuracy:", (analysis["correct_count"]/analysis["test_size"]) * 100.00)
+    print("Total Trades:", analysis["total_invests"])
+    print("Ending with Strategy:",analysis["if_strat"])
+    print("Ending with Market:",analysis["if_market"])
+     
+    compared = ((analysis["if_strat"] - analysis["if_market"]) /analysis["if_market"]) * 100.0
+    do_nothing = analysis["total_invests"] * analysis["invest_amount"]
+     
+    avg_market = ((analysis["if_market"] - do_nothing) / do_nothing) * 100.0
+    avg_strat = ((analysis["if_strat"] - do_nothing) / do_nothing) * 100.0
+     
+    print("Compared to market, we earn",str(compared)+"% more")
+    print("Average investment return:",str(avg_strat)+"%")
+    print("Average market return:",str(avg_market)+"%")
 
-    test_size = 1000
-    invest_amount = 10000
-    total_invests = 0
-    # if direct invested in market
-    if_market = 0
+def Analysis():
+    analysis = {}
+    analysis["test_size"] = 1000
+    analysis["invest_amount"] = 10000
+    analysis["total_invests"] = 0
+    # if invested in market (e. g. index fonds)
+    analysis["if_market"] = 0
     # if invested with strategy
-    if_strat = 0
+    analysis["if_strat"] = 0
     
     X, y, Z = Build_Data_Set()
     print(len(X))
 
     
     clf = svm.SVC(kernel="linear", C= 1.0)
-    clf.fit(X[:-test_size],y[:-test_size])
+    clf.fit(X[:-analysis["test_size"]],y[:-analysis["test_size"]])
 
-    correct_count = 0 
-    prediction = clf.predict(X)  
-    for x in range(1, test_size + 1):
-        #if (clf.predict(X[-x])==y[-x]):
-        if (prediction[x]==y[x]):
-            correct_count += 1
-        if prediction[x] == 1:
-            invest_return = invest_amount + (invest_amount * (Z[x][0]/100))
-            market_return = invest_amount + (invest_amount * (Z[x][1]/100))
-            total_invests += 1
-            if_market += market_return
-            if_strat += invest_return
-
-    #===========================================================================
-    # print("Accuracy:", (correct_count/test_size) * 100.00)
-    # print("Total Trades:", total_invests)
-    # print("Ending with Strategy:",if_strat)
-    # print("Ending with Market:",if_market)
-    # 
-    # compared = ((if_strat - if_market) /if_market) * 100.0
-    # do_nothing = total_invests * invest_amount
-    # 
-    # avg_market = ((if_market - do_nothing) / do_nothing) * 100.0
-    # avg_strat = ((if_strat - do_nothing) / do_nothing) * 100.0
-    # 
-    # print("Compared to market, we earn",str(compared)+"% more")
-    # print("Average investment return:",str(avg_strat)+"%")
-    # print("Average market return:",str(avg_market)+"%")
-    #===========================================================================
+    analysis["correct_count"] = 0 
     
-    data_df = pd.read_csv("key_stats_acc_perf_WITH_NA.csv")
+    for x in range(1, analysis["test_size"]+1):
+        # boxed in an array, for using clf.predict(data)later
+        data = [X[-x]]
+        prediction = clf.predict(data)[0]
+        if (prediction==y[-x]):
+            analysis["correct_count"] += 1
+        if (prediction == 1):
+            invest_return = analysis["invest_amount"] + (analysis["invest_amount"] * (Z[-x][0]/100))
+            market_return = analysis["invest_amount"] + (analysis["invest_amount"] * (Z[-x][1]/100))
+            analysis["total_invests"] += 1
+            analysis["if_market"] += market_return
+            analysis["if_strat"] += invest_return
+
+
+    analysis_print(analysis)
+    data_df = pd.read_csv("forward_sample_WITH_NA.csv")
     data_df = data_df.fillna(0).replace("N/A",0)
     
     X = np.array(data_df[FEATURES].values.tolist())
@@ -131,19 +131,22 @@ def Analysis():
     Z = data_df["Ticker"].values.tolist()
     
     invest_list = []
-    prediction = clf.predict(X)
+    not_invest_list = []
     for i in range(len(X)):
-        p = prediction[i]
-        if p == 1:
-            #print(Z[i])
+        data = [X[i]]
+        prediction = clf.predict(data)[0]
+        if prediction == 1:
             invest_list.append(Z[i])
-
+        else:
+            not_invest_list.append(Z[i])
     
-#    print(len(invest_list))
-#    print(invest_list)
+    print(len(invest_list)/len(Z)*100,'% of the stocks are',how_much_better,'% better than the rest')
     return invest_list
 
 print(Analysis())
+
+
+
 #===============================================================================
 # final_list = []
 # 

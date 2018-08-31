@@ -16,6 +16,8 @@ def Check_Yahoo():
             e = e.replace(statspath+"\\","")
             ## Changed the URL & added the modules
             link = "https://query2.finance.yahoo.com/v10/finance/quoteSummary/"+e.upper()+"?modules=assetProfile,financialData,defaultKeyStatistics,calendarEvents,incomeStatementHistory,cashflowStatementHistory,balanceSheetHistory"
+            #https://query2.finance.yahoo.com/v10/finance/quoteSummary/abc?modules=assetProfile,financialData,defaultKeyStatistics,calendarEvents,incomeStatementHistory,cashflowStatementHistory,balanceSheetHistory
+            #https://query2.finance.yahoo.com/v10/finance/quoteSummary/abc?function=TIME_SERIES_WEEKLY_ADJUSTED&modules=assetProfile,financialData,defaultKeyStatistics,calendarEvents,incomeStatementHistory,cashflowStatementHistory,balanceSheetHistory
             resp = urllib.request.urlopen(link).read()
             ## We go by Bond. JSON Bond
             save = "C:/Users/bav9158/git/course-predictor/data/yahoo/"+str(e)+".json"
